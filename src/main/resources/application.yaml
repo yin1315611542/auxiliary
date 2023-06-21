@@ -1,0 +1,10 @@
+server:
+  port: 8895
+spring:
+  datasource:
+    url: jdbc:sqlite:auxiliary.db
+    driver-class-name: org.sqlite.JDBC
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
