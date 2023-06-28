@@ -2,8 +2,10 @@ package cn.goldencis.auxiliary.infrastructure.common;
 
 import org.apache.commons.exec.*;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 /**
  * @program: auxiliary
@@ -12,12 +14,10 @@ import java.io.IOException;
  * @create: 2023-06-21 13:59
  **/
 public class CommandUtil {
-    public static String execute(String path,String cmd) {
+    public static String execute(String path,String command) {
         try {
-            String logFile = path;
-            String command = "cat " + logFile ;
             CommandLine cmdLine = CommandLine.parse(command);
-            DefaultExecutor executor = new DefaultExecutor();
+            Executor executor = new DefaultExecutor();
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream);
             executor.setStreamHandler(streamHandler);
@@ -27,6 +27,21 @@ public class CommandUtil {
             System.out.println("Output: " + output);
             return output;
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public static String execute2(String path,String command){
+        try {
+            Process process = Runtime.getRuntime().exec("");
+            int i = process.waitFor();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+            reader.close();
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
         return null;

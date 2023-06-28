@@ -8,3 +8,5 @@
   包含对磁盘空间、内存占用、各种中间件（es、actibemqp）的健康状态检查以及修复
 ## 部署
   待定
+
+bugFixProcess

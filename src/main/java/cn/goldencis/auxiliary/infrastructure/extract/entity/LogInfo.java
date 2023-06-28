@@ -1,4 +1,4 @@
-package cn.goldencis.auxiliary.application.extract.entity;
+package cn.goldencis.auxiliary.infrastructure.extract.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

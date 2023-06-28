@@ -1,4 +1,4 @@
-package cn.goldencis.auxiliary.domain.problem;
+package cn.goldencis.auxiliary.domain.step;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,27 +16,23 @@ import java.time.LocalDateTime;
  * @program: auxiliary
  * @description:
  * @Author: yinhd
- * @create: 2023-06-19 17:45
+ * @create: 2023-06-25 16:38
  **/
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
 @Entity
-@Table(name = "problem")
-public class Problem implements Serializable {
+@Table(name = "step")
+public class Step implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String problemType;
+    private String StepName;
 
-    private Long souId;
+    private String StepType;
 
-    private String causeChain;
-
-    private String describe;
-
-    private String keyWord;
+    private String excContent;
 
     private LocalDateTime createTime;
 
