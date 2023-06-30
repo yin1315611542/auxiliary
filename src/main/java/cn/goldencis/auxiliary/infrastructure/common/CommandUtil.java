@@ -23,8 +23,8 @@ public class CommandUtil {
             executor.setStreamHandler(streamHandler);
             int exitValue = executor.execute(cmdLine);
             String output = outputStream.toString();
-            System.out.println("Exit value: " + exitValue);
-            System.out.println("Output: " + output);
+//            System.out.println("Exit value: " + exitValue);
+//            System.out.println("Output: " + output);
             return output;
         } catch (IOException e) {
             e.printStackTrace();
