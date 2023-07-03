@@ -21,7 +21,6 @@ public class LogExtract {
     LinkedBlockingQueue<ErrorInfo> errorInfos;
 
     public void extract(String file) {
-        long s;
         String logContent = CommandUtil.execute("","cat /gdsoft/soft/vops/logs/" + file);
         Pattern errorPattern = Pattern.compile("^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2},\\d+ ERROR.*?\\n(.*\\n)*?(?=^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2},\\d+ ERROR|$)", Pattern.MULTILINE);
         Matcher matcher = errorPattern.matcher(logContent);
