@@ -20,9 +20,9 @@ public class LinuxCommandExec extends AbstractExec implements ExecInterface {
     @Override
     public void execScheme(Step step) {
         String command = step.getExcContent();
-        log.info("【ExecCommand】LinuxCommand: {}",command);
-        String execute = CommandUtil.execute2(command);
-        log.info("【ExecCommand】CommandResult:{}",execute);
+        log.info("【Command】执行命令: {}", command);
+        String execute = CommandUtil.commandExecute(command);
+        log.info("【Command】执行结果:{}", execute);
 
     }
 

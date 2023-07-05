@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -41,19 +42,43 @@ public class CommandUtil {
         return null;
     }
 
-    public static String bashExecute(String command) {
+    public static String commandExecute(String command) {
         try {
             String[] cmd = new String[]{"bash", "-c", command};
             Process process = Runtime.getRuntime().exec(cmd);
             int i = process.waitFor();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
+            StringBuilder errorInfo = new StringBuilder();
             while ((line = reader.readLine()) != null) {
-                log.info(line);
+                errorInfo.append("\n").append(line);
             }
             reader.close();
+            return errorInfo.toString();
         } catch (IOException | InterruptedException e) {
             log.info("command2执行命令异常{}", e.toString());
+        }
+        return null;
+    }
+
+    public static String bashExecute(String bash) {
+        try {
+            // 创建一个ProcessBuilder对象，设置要执行的命令
+            ProcessBuilder processBuilder = new ProcessBuilder(bash);
+            // 启动进程并等待其完成
+            Process process = processBuilder.start();
+            boolean exitCode = process.waitFor(50L, TimeUnit.SECONDS);
+            // 读取进程的输出
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            StringBuffer result = new StringBuffer();
+            while ((line = reader.readLine()) != null) {
+                // 处理进程输出
+                result.append("\n").append(line);
+            }
+            return result.toString();
+        } catch (Exception e) {
+            log.info("【脚本】:{}执行Exception:{}", bash, e.toString());
         }
         return null;
     }
@@ -75,23 +100,6 @@ public class CommandUtil {
         }
         return null;
     }
-
-    public static String execute3(String command) {
-        try {
-            Process process = Runtime.getRuntime().exec(command);
-            int i = process.waitFor();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                log.info(line);
-            }
-            reader.close();
-        } catch (IOException | InterruptedException e) {
-            log.info("command2执行命令异常{}", e.toString());
-        }
-        return null;
-    }
-
 
     public static List<String> splits(String text) {
         List<String> result = new ArrayList<>();

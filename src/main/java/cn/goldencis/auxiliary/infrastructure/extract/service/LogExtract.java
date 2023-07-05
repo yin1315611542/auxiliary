@@ -2,6 +2,7 @@ package cn.goldencis.auxiliary.infrastructure.extract.service;
 
 import cn.goldencis.auxiliary.domain.loginfo.ErrorInfo;
 import cn.goldencis.auxiliary.infrastructure.common.CommandUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -17,6 +18,7 @@ import java.util.regex.Pattern;
  * @create: 2023-06-21 11:41
  **/
 @Component
+@Slf4j
 public class LogExtract {
     @Resource
     LinkedBlockingQueue<ErrorInfo> errorInfos;
@@ -24,7 +26,10 @@ public class LogExtract {
     public static String interceptionMethod = "cat";
 
     public void extract(String path, String file) {
-        String logContent = CommandUtil.bashExecute(interceptionMethod + " " + path + File.pathSeparator + file);
+        String logContent = CommandUtil.commandExecute(interceptionMethod + " " + path + File.separator + file);
+        if (logContent != null) {
+            log.info("【日志读取长度】:{}", logContent.length());
+        }
         Pattern errorPattern = Pattern.compile(interceptionRules, Pattern.MULTILINE);
         if (logContent != null) {
             Matcher matcher = errorPattern.matcher(logContent);
