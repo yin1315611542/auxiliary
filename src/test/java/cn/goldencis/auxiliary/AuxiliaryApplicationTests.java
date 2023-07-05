@@ -1,5 +1,6 @@
 package cn.goldencis.auxiliary;
 
+import cn.goldencis.auxiliary.infrastructure.common.CommandUtil;
 import cn.goldencis.auxiliary.infrastructure.extract.entity.MyException;
 import cn.goldencis.auxiliary.infrastructure.reduction.ExceptionService;
 import org.apache.commons.exec.*;
@@ -7,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -109,4 +112,40 @@ class AuxiliaryApplicationTests {
 
     }
 
+    @Test
+    public void getDate() {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedDate = now.format(formatter);
+        System.out.println("当前日期：" + formattedDate);
+    }
+
+    @Test
+    public void command() {
+        String logContent = CommandUtil.execute3("cat /gdsoft/soft/vops/logs/vops-config-hub-error.2023-07-03.log | grep ss");
+        if (logContent == null) {
+            System.out.printf("空\n");
+        } else {
+            System.out.printf(logContent);
+        }
+    }
+
+    @Test
+    public void execute3() {
+        String filePath = "/gdsoft/soft/vops/logs/vops-config-hub-error.2023-07-03.log";
+        String searchString = "ss";
+        try {
+            String[] cmd = new String[]{"bash", "-c", "mysql -uroot -pgoldencis  -e \"CREATE TABLE vops_config_hub.t_ntp_config  (id int(11) NOT NULL COMMENT '主键id',IPV4 varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '时间服务器的ip',filed1 varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '备用字段1',filed2 varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '备用字段2',filed3 varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '备用字段3',PRIMARY KEY (id) USING BTREE)\""};
+            Process process = Runtime.getRuntime().exec(cmd);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (ExecuteException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package cn.goldencis.auxiliary.infrastructure.common;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.Executor;
@@ -22,8 +23,9 @@ import java.util.stream.Collectors;
  * @Author: yinhd
  * @create: 2023-06-21 13:59
  **/
+@Slf4j
 public class CommandUtil {
-    public static String execute(String path,String command) {
+    public static String execute(String command) {
         try {
             CommandLine cmdLine = CommandLine.parse(command);
             Executor executor = new DefaultExecutor();
@@ -32,11 +34,26 @@ public class CommandUtil {
             executor.setStreamHandler(streamHandler);
             int exitValue = executor.execute(cmdLine);
             String output = outputStream.toString();
-//            System.out.println("Exit value: " + exitValue);
-//            System.out.println("Output: " + output);
             return output;
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            log.info("【日志抽取异常】:{}", e.toString());
+        }
+        return null;
+    }
+
+    public static String bashExecute(String command) {
+        try {
+            String[] cmd = new String[]{"bash", "-c", command};
+            Process process = Runtime.getRuntime().exec(cmd);
+            int i = process.waitFor();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                log.info(line);
+            }
+            reader.close();
+        } catch (IOException | InterruptedException e) {
+            log.info("command2执行命令异常{}", e.toString());
         }
         return null;
     }
@@ -50,11 +67,27 @@ public class CommandUtil {
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
             while ((line = reader.readLine()) != null) {
-                System.out.println(line);
+                log.info(line);
             }
             reader.close();
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            log.info("command2执行命令异常{}", e.toString());
+        }
+        return null;
+    }
+
+    public static String execute3(String command) {
+        try {
+            Process process = Runtime.getRuntime().exec(command);
+            int i = process.waitFor();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                log.info(line);
+            }
+            reader.close();
+        } catch (IOException | InterruptedException e) {
+            log.info("command2执行命令异常{}", e.toString());
         }
         return null;
     }

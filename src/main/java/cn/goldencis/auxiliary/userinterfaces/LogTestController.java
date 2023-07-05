@@ -2,8 +2,6 @@ package cn.goldencis.auxiliary.userinterfaces;
 
 import cn.goldencis.auxiliary.application.errorfix.ErrorFixService;
 import cn.goldencis.auxiliary.domain.loginfo.ErrorInfoDispatcher;
-import cn.goldencis.auxiliary.domain.loginfo.enumeration.ErrorInfoConverter;
-import cn.goldencis.auxiliary.infrastructure.extract.entity.MyException;
 import cn.goldencis.auxiliary.infrastructure.extract.service.LogExtract;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +28,7 @@ public class LogTestController {
 
     @GetMapping("/logtest")
     public String get(String file){
-        logExtract.extract(file);
+        logExtract.extract("", file);
         return null;
     }
     @GetMapping("/problem")

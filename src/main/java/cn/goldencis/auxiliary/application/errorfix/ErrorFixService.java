@@ -1,23 +1,21 @@
 package cn.goldencis.auxiliary.application.errorfix;
 
-import cn.goldencis.auxiliary.domain.step.Step;
-import cn.goldencis.auxiliary.domain.step.service.StepService;
-import cn.goldencis.auxiliary.infrastructure.execution.ExecDispatcher;
-import cn.goldencis.auxiliary.infrastructure.extract.entity.MyException;
 import cn.goldencis.auxiliary.domain.problem.Problem;
 import cn.goldencis.auxiliary.domain.problem.service.ProblemService;
 import cn.goldencis.auxiliary.domain.scheme.Scheme;
 import cn.goldencis.auxiliary.domain.scheme.service.SchemeService;
 import cn.goldencis.auxiliary.domain.solution.Solution;
 import cn.goldencis.auxiliary.domain.solution.service.SolutionService;
+import cn.goldencis.auxiliary.domain.step.Step;
+import cn.goldencis.auxiliary.domain.step.service.StepService;
+import cn.goldencis.auxiliary.infrastructure.execution.ExecDispatcher;
+import cn.goldencis.auxiliary.infrastructure.extract.entity.MyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static java.lang.System.out;
 
 /**
  * @program: auxiliary
@@ -42,16 +40,17 @@ public class ErrorFixService {
         //定位问题
         List<Problem> problems = problemService.determineProblem(exception);
         Map<Solution,List<Step> > solutionMap = new HashMap<>();
-
+        //遍历问题，确定方案
         for (Problem problem : problems) {
             //确定解决方案
             List<Solution> solutions = solutionService.determineSolution(problem);
-            //生成执行计划
+            //生成执行方案
             for (Solution solution: solutions) {
                 List<Step> steps = stepService.finStepByIds(solution.init().getStepIds());
                 solutionMap.put(solution,steps);
             }
             Scheme scheme = schemeService.makeAScheme(exception,problem,solutionMap);
+            //执行方案
             execDispatcher.execScheme(scheme);
         }
 
