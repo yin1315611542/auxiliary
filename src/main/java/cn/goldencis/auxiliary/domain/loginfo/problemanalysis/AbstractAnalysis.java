@@ -17,7 +17,6 @@ public abstract class AbstractAnalysis implements AnalysisHandler{
          return;
        }
        handleError(errorInfo);
-       log.info("Handle process message");
     }
     /**
      * 校验后处理消息

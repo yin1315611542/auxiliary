@@ -10,9 +10,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,20 +40,54 @@ public class CommandUtil {
         return null;
     }
 
-    public static String commandExecute(String command) {
+    //    public static String commandExecute(String command) {
+//        try {
+//            String[] cmd = new String[]{"bash", "-c", command};
+//            Process process = Runtime.getRuntime().exec(cmd);
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()), 1024 * );
+//            BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()), 1024 * 1024);
+//            StringBuilder stringBuilder = new StringBuilder();
+//            String line;
+//            while ((line = reader.readLine()) != null) {
+//                stringBuilder.append(line);
+//                stringBuilder.append("\n");
+//            }
+//            while ((line = errorReader.readLine()) != null) {
+//                stringBuilder.append(line);
+//                stringBuilder.append("\n");
+//            }
+//            reader.close();
+//            errorReader.close();
+////            int exitCode = process.waitFor();
+////            if (exitCode != 0) {
+////                throw new RuntimeException("Command execution failed with exit code " + exitCode );
+////            }
+//            return stringBuilder.toString();
+//        } catch (IOException  e) {
+//            throw new RuntimeException("Error while executing command", e);
+//        }
+//    }
+    public static Map<String, String> commandExecute(String command) {
         try {
+            HashMap<String, String> info = new HashMap<>();
             String[] cmd = new String[]{"bash", "-c", command};
             Process process = Runtime.getRuntime().exec(cmd);
-            int i = process.waitFor();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line;
+            InputStreamReader inputStreamReader = new InputStreamReader(process.getInputStream());
+            BufferedReader reader = new BufferedReader(inputStreamReader);
+            String line = null;
+            Integer lineNum = 0;
             StringBuilder errorInfo = new StringBuilder();
             while ((line = reader.readLine()) != null) {
                 errorInfo.append("\n").append(line);
+                lineNum++;
             }
+            process.getInputStream().close();
+            inputStreamReader.close();
             reader.close();
-            return errorInfo.toString();
-        } catch (IOException | InterruptedException e) {
+            info.put("context", errorInfo.toString());
+            info.put("lineNum", lineNum.toString());
+            return info;
+        } catch (IOException e) {
             log.info("command2执行命令异常{}", e.toString());
         }
         return null;

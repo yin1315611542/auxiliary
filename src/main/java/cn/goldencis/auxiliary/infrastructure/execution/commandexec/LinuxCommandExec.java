@@ -7,6 +7,8 @@ import cn.goldencis.auxiliary.infrastructure.execution.ExecInterface;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 /**
  * @program: auxiliary
  * @description:
@@ -21,7 +23,7 @@ public class LinuxCommandExec extends AbstractExec implements ExecInterface {
     public void execScheme(Step step) {
         String command = step.getExcContent();
         log.info("【Command】执行命令: {}", command);
-        String execute = CommandUtil.commandExecute(command);
+        String execute = Objects.requireNonNull(CommandUtil.commandExecute(command)).get("context");
         log.info("【Command】执行结果:{}", execute);
 
     }

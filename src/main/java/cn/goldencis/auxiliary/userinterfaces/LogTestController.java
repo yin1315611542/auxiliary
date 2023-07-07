@@ -28,7 +28,7 @@ public class LogTestController {
 
     @GetMapping("/logtest")
     public String get(String file){
-        logExtract.extract("", file);
+        logExtract.extract("", file, null);
         return null;
     }
     @GetMapping("/problem")

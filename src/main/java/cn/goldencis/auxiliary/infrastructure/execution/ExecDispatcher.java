@@ -10,8 +10,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
-import static java.lang.System.out;
-
 /**
  * @program: auxiliary
  * @description:
@@ -43,7 +41,7 @@ public class ExecDispatcher {
     public void execScheme(Scheme scheme){
         Map<Solution, List<Step>> solutions = scheme.getSolutions();
         for (Solution solution: solutions.keySet()) {
-               log.info("执行方案{}",solution.getName());
+            log.info("【执行方案】：{}", solution.getName());
                List<Step> steps = solutions.get(solution);
                for (Step step: steps) {
                    this.doDispatch(step);
