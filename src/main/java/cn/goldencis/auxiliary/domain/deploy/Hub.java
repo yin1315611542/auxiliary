@@ -19,7 +19,9 @@ public class Hub {
     private Boolean state;
     private String path;
     private String logPath;
+    private String logExtractTime;
     private Boolean dState;
     //jcmd 19160 VM.uptime | awk '{print int($1/60)" 分钟"}' | xargs -I {} echo "程序已运行 {}
+    @Transient
     private Long RunTime;
 }

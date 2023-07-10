@@ -8,23 +8,24 @@ import cn.goldencis.auxiliary.infrastructure.extract.service.LogExtract;
 import lombok.SneakyThrows;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 
-@Component
+
 public class SelfCheckJob implements Job {
-    @Autowired
-    List<Hub> hubs;
 
     @SneakyThrows
     @Override
     public void execute(JobExecutionContext jobExecutionContext) {
         LogExtract logExtract = SpringUtil.getBean("logExtract");
+        List<Hub> hubs = SpringUtil.getBean("hubs");
         String date = DateUtil.YYYY_MM_DD();
         for (Hub hub : hubs) {
-            logExtract.extract(hub.getLogPath(), hub.getName() + "-error" + date);
+            String markTime = logExtract.extract(hub.getLogPath(), hub.getName() + "-error." + "2023-07-03" + ".log", hub.getLogExtractTime());
+            if (!ObjectUtils.isEmpty(markTime)) {
+                hub.setLogExtractTime(markTime);
+            }
             ErrorInfoDispatcher errorInfoDispatcher = SpringUtil.getBean("errorInfoDispatcher");
             errorInfoDispatcher.takeErrorInfo();
         }

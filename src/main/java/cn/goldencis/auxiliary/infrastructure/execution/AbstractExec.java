@@ -1,9 +1,7 @@
 package cn.goldencis.auxiliary.infrastructure.execution;
 
-import cn.goldencis.auxiliary.domain.scheme.Scheme;
 import cn.goldencis.auxiliary.domain.step.Step;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 /**
  * @program: auxiliary
@@ -19,7 +17,6 @@ public  abstract class AbstractExec implements ExecInterface{
             return;
         }
         execScheme(step);
-        log.info("Handle process message");
     }
 
     public abstract void execScheme(Step step);

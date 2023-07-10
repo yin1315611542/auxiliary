@@ -6,10 +6,10 @@ spring:
     driver-class-name: org.sqlite.JDBC
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
     properties:
-      hibernate.format_sql_logging: true
+      hibernate.format_sql_logging: false
 auxiliary:
   sh:
     #上传脚本存储路径
