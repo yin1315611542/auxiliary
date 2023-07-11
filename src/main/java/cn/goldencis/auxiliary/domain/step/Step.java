@@ -4,13 +4,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @program: auxiliary
@@ -37,4 +35,15 @@ public class Step implements Serializable {
     private LocalDateTime createTime;
 
     private LocalDateTime updateTime;
+
+    private Long level;
+
+    private Long parentId;
+
+    private Long solutionId;
+
+    private String execResult;
+
+    @Transient
+    private List<Step> childStep = new ArrayList<>();
 }

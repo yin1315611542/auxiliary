@@ -4,6 +4,7 @@ import cn.goldencis.auxiliary.domain.step.Step;
 import cn.goldencis.auxiliary.infrastructure.common.CommandUtil;
 import cn.goldencis.auxiliary.infrastructure.execution.AbstractExec;
 import cn.goldencis.auxiliary.infrastructure.execution.ExecInterface;
+import cn.goldencis.auxiliary.infrastructure.execution.entity.ExecResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -23,12 +24,13 @@ public class ShellCommandExec extends AbstractExec implements ExecInterface {
     String path;
 
     @Override
-    public void execScheme(Step step) {
+    public ExecResult execScheme(Step step) {
         String shName = step.getExcContent();
         String bash = path + File.separator + shName;  // 指定要执行的shell脚本文件路径
         log.info("【执行脚本路径】:{}", bash);
         String result = CommandUtil.bashExecute(bash);
         log.info("【脚本执行结果】:{}", result);
+        return null;
     }
 
     @Override

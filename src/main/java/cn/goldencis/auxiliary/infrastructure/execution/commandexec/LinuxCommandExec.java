@@ -4,6 +4,7 @@ import cn.goldencis.auxiliary.domain.step.Step;
 import cn.goldencis.auxiliary.infrastructure.common.CommandUtil;
 import cn.goldencis.auxiliary.infrastructure.execution.AbstractExec;
 import cn.goldencis.auxiliary.infrastructure.execution.ExecInterface;
+import cn.goldencis.auxiliary.infrastructure.execution.entity.ExecResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -20,11 +21,12 @@ import java.util.Objects;
 public class LinuxCommandExec extends AbstractExec implements ExecInterface {
 
     @Override
-    public void execScheme(Step step) {
+    public ExecResult execScheme(Step step) {
         String command = step.getExcContent();
         log.info("【Command】执行命令: {}", command);
-        String execute = Objects.requireNonNull(CommandUtil.commandExecute(command)).get("context");
-        log.info("【Command】执行结果:{}", execute);
+        ExecResult execResult = Objects.requireNonNull(CommandUtil.commandExecute(command));
+        log.info("【Command】执行结果:{}", execResult.getMessage());
+        return execResult;
 
     }
 

@@ -3,12 +3,12 @@ package cn.goldencis.auxiliary.application.errorfix;
 import cn.goldencis.auxiliary.domain.problem.Problem;
 import cn.goldencis.auxiliary.domain.problem.service.ProblemService;
 import cn.goldencis.auxiliary.domain.scheme.Scheme;
+import cn.goldencis.auxiliary.domain.scheme.handler.SchemeHandler;
 import cn.goldencis.auxiliary.domain.scheme.service.SchemeService;
 import cn.goldencis.auxiliary.domain.solution.Solution;
 import cn.goldencis.auxiliary.domain.solution.service.SolutionService;
 import cn.goldencis.auxiliary.domain.step.Step;
 import cn.goldencis.auxiliary.domain.step.service.StepService;
-import cn.goldencis.auxiliary.infrastructure.execution.ExecDispatcher;
 import cn.goldencis.auxiliary.infrastructure.extract.entity.MyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +34,7 @@ public class ErrorFixService {
     @Autowired
     StepService stepService;
     @Autowired
-    ExecDispatcher execDispatcher;
+    SchemeHandler schemeHandler;
 
     public void fix(MyException exception){
         //定位问题
@@ -51,7 +51,7 @@ public class ErrorFixService {
             }
             Scheme scheme = schemeService.makeAScheme(exception,problem,solutionMap);
             //执行方案
-            execDispatcher.execScheme(scheme);
+            schemeHandler.ImplementScheme(scheme);
         }
 
 

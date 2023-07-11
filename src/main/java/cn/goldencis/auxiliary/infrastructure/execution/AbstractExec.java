@@ -1,6 +1,7 @@
 package cn.goldencis.auxiliary.infrastructure.execution;
 
 import cn.goldencis.auxiliary.domain.step.Step;
+import cn.goldencis.auxiliary.infrastructure.execution.entity.ExecResult;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -11,13 +12,13 @@ import lombok.extern.slf4j.Slf4j;
  **/
 @Slf4j
 public  abstract class AbstractExec implements ExecInterface{
-    public  final void exec(Step step){
+    public final ExecResult exec(Step step) {
         if (!support(step)){
             log.error("handler do not support the error");
-            return;
+            return null;
         }
-        execScheme(step);
+        return execScheme(step);
     }
 
-    public abstract void execScheme(Step step);
+    public abstract ExecResult execScheme(Step step);
 }
