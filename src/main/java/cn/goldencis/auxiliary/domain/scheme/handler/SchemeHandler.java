@@ -36,12 +36,13 @@ public class SchemeHandler {
         if (execResult.getCode() == 1) {
             return false;
         } else {
+
             execStep(step.getChildStep());
         }
         return true;
     }
 
-    public boolean execStep(List<Step> steps) {
+    private boolean execStep(List<Step> steps) {
         for (Step step : steps) {
             ExecResult execResult = dispatcher.doDispatch(step);
             if (execResult.getCode() == 0) {

@@ -58,13 +58,13 @@ public class SpringUtil implements ApplicationContextAware {
      * @return 对象
      */
     public static <T> T getBean(String beanName, Class<T> clazz) {
-        if (null == beanName || "".equals(beanName.trim())) {
+        if (null == beanName || beanName.trim().isEmpty()) {
             return null;
         }
         if (clazz == null) {
             return null;
         }
-        return (T) context.getBean(beanName, clazz);
+        return context.getBean(beanName, clazz);
     }
 
     /**
