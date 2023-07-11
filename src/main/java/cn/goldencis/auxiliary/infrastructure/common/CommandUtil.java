@@ -1,5 +1,6 @@
 package cn.goldencis.auxiliary.infrastructure.common;
 
+import cn.goldencis.auxiliary.infrastructure.execution.entity.ExecResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
@@ -10,7 +11,10 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,41 +44,40 @@ public class CommandUtil {
         return null;
     }
 
-    //    public static String commandExecute(String command) {
-//        try {
-//            String[] cmd = new String[]{"bash", "-c", command};
-//            Process process = Runtime.getRuntime().exec(cmd);
-//            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()), 1024 * );
-//            BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()), 1024 * 1024);
-//            StringBuilder stringBuilder = new StringBuilder();
-//            String line;
-//            while ((line = reader.readLine()) != null) {
-//                stringBuilder.append(line);
-//                stringBuilder.append("\n");
-//            }
-//            while ((line = errorReader.readLine()) != null) {
-//                stringBuilder.append(line);
-//                stringBuilder.append("\n");
-//            }
-//            reader.close();
-//            errorReader.close();
-////            int exitCode = process.waitFor();
-////            if (exitCode != 0) {
-////                throw new RuntimeException("Command execution failed with exit code " + exitCode );
-////            }
-//            return stringBuilder.toString();
-//        } catch (IOException  e) {
-//            throw new RuntimeException("Error while executing command", e);
-//        }
-//    }
-    public static Map<String, String> commandExecute(String command) {
+    public static String commandExecute2(String command) {
+        try {
+            String[] cmd = new String[]{"bash", "-c", command};
+            Process process = Runtime.getRuntime().exec(cmd);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()), 1024 * 1024);
+            BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()), 1024 * 1024);
+            StringBuilder stringBuilder = new StringBuilder();
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+            while ((line = errorReader.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+            int i = process.waitFor();
+            reader.close();
+            errorReader.close();
+            return stringBuilder.toString();
+        } catch (IOException e) {
+            throw new RuntimeException("Error while executing command", e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static ExecResult commandExecute(String command) {
         try {
             HashMap<String, String> info = new HashMap<>();
             String[] cmd = new String[]{"bash", "-c", command};
             Process process = Runtime.getRuntime().exec(cmd);
             InputStreamReader inputStreamReader = new InputStreamReader(process.getInputStream());
             BufferedReader reader = new BufferedReader(inputStreamReader);
-            String line = null;
+            String line;
             Integer lineNum = 0;
             StringBuilder errorInfo = new StringBuilder();
             while ((line = reader.readLine()) != null) {
@@ -84,9 +87,7 @@ public class CommandUtil {
             process.getInputStream().close();
             inputStreamReader.close();
             reader.close();
-            info.put("context", errorInfo.toString());
-            info.put("lineNum", lineNum.toString());
-            return info;
+            return new ExecResult(0, errorInfo.toString(), lineNum);
         } catch (IOException e) {
             log.info("command2执行命令异常{}", e.toString());
         }

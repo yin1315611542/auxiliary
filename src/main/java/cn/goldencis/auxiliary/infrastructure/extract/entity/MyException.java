@@ -1,5 +1,6 @@
 package cn.goldencis.auxiliary.infrastructure.extract.entity;
 
+import lombok.Data;
 import org.springframework.util.ObjectUtils;
 
 /**
@@ -8,6 +9,7 @@ import org.springframework.util.ObjectUtils;
  * @Author: yinhd
  * @create: 2023-06-21 16:13
  **/
+@Data
 public class MyException extends Exception{
     private String type;
 
@@ -15,6 +17,9 @@ public class MyException extends Exception{
 
     public MyException(String message, Throwable cause) {
         super(message, cause);
+    }
+
+    public MyException() {
     }
 
 
@@ -55,4 +60,6 @@ public class MyException extends Exception{
         }
         return sb.toString();
     }
+
+
 }

@@ -1,7 +1,7 @@
 package cn.goldencis.auxiliary.infrastructure.execution;
 
-import cn.goldencis.auxiliary.domain.scheme.Scheme;
 import cn.goldencis.auxiliary.domain.step.Step;
+import cn.goldencis.auxiliary.infrastructure.execution.entity.ExecResult;
 
 /**
  * @program: auxiliary
@@ -10,6 +10,6 @@ import cn.goldencis.auxiliary.domain.step.Step;
  * @create: 2023-06-28 10:03
  **/
 public interface ExecInterface {
-    void exec(Step step);
+    ExecResult exec(Step step);
     Boolean support(Step step);
 }

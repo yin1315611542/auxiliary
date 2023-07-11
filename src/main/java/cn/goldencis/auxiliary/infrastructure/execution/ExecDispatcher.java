@@ -1,14 +1,12 @@
 package cn.goldencis.auxiliary.infrastructure.execution;
 
-import cn.goldencis.auxiliary.domain.scheme.Scheme;
-import cn.goldencis.auxiliary.domain.solution.Solution;
 import cn.goldencis.auxiliary.domain.step.Step;
+import cn.goldencis.auxiliary.infrastructure.execution.entity.ExecResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @program: auxiliary
@@ -22,11 +20,12 @@ public class ExecDispatcher {
     @Autowired
     List<ExecInterface> execInterfaces;
 
-    private void doDispatch(Step step){
+    public ExecResult doDispatch(Step step) {
         ExecInterface execHandler = this.getExecHandler(step);
         if (execHandler!=null){
-            execHandler.exec(step);
+            return execHandler.exec(step);
         }
+        return null;
     }
 
     private ExecInterface getExecHandler(Step step){
@@ -36,16 +35,5 @@ public class ExecDispatcher {
             }
         }
         return null;
-    }
-
-    public void execScheme(Scheme scheme){
-        Map<Solution, List<Step>> solutions = scheme.getSolutions();
-        for (Solution solution: solutions.keySet()) {
-            log.info("【执行方案】：{}", solution.getName());
-               List<Step> steps = solutions.get(solution);
-               for (Step step: steps) {
-                   this.doDispatch(step);
-               }
-        }
     }
 }

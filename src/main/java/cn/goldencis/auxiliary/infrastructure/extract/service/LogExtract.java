@@ -2,13 +2,13 @@ package cn.goldencis.auxiliary.infrastructure.extract.service;
 
 import cn.goldencis.auxiliary.domain.loginfo.ErrorInfo;
 import cn.goldencis.auxiliary.infrastructure.common.CommandUtil;
+import cn.goldencis.auxiliary.infrastructure.execution.entity.ExecResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.io.File;
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.regex.Matcher;
@@ -36,8 +36,8 @@ public class LogExtract {
         String command = ObjectUtils.isEmpty(extractTime) ? String.format(interceptionMethod1, interceptionLength, path + File.separator + file)
                 : String.format(interceptionMethod2, interceptionLength, extractTime, path + File.separator + file);
         //执行命令
-        Map<String, String> info = CommandUtil.commandExecute(command);
-        String logContent = Objects.requireNonNull(info).get("context");
+        ExecResult execResult = CommandUtil.commandExecute(command);
+        String logContent = Objects.requireNonNull(execResult).getMessage();
         log.info("【日志读取】命令：【{}】, 文件：【{}】, 截取起始时间:【{}】, 长度【{}】", command, file, extractTime, ObjectUtils.isEmpty(logContent) ? 0 : logContent.length());
         //分割错误日志
         if (!ObjectUtils.isEmpty(logContent)) {
@@ -47,7 +47,7 @@ public class LogExtract {
                 ErrorInfo errorInfo = addErrorInfo(matcher.group(), extractTime);
                 mark = ObjectUtils.isEmpty(errorInfo) ? null : errorInfo.getOccurrenceTime();
             }
-            if (ObjectUtils.isEmpty(mark) && Integer.parseInt(Objects.requireNonNull(info).get("lineNum")) < 200) {
+            if (ObjectUtils.isEmpty(mark) && execResult.getLineNumber() < 200) {
                 ErrorInfo errorInfo = addSingleErrorInfo(logContent, extractTime);
                 mark = ObjectUtils.isEmpty(errorInfo) ? null : errorInfo.getOccurrenceTime();
             }
@@ -81,6 +81,4 @@ public class LogExtract {
         }
         return addErrorInfo(content.substring(index), extractTime);
     }
-
-
 }
