@@ -66,7 +66,7 @@ public class CommandUtil {
             InputStreamReader inputStreamReader = new InputStreamReader(process.getInputStream());
             BufferedReader reader = new BufferedReader(inputStreamReader);
             String line;
-            Integer lineNum = 0;
+            int lineNum = 0;
             StringBuilder errorInfo = new StringBuilder();
             while ((line = reader.readLine()) != null) {
                 errorInfo.append("\n").append(line);

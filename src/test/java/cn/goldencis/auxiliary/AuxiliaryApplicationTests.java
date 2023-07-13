@@ -1,6 +1,7 @@
 package cn.goldencis.auxiliary;
 
 import cn.goldencis.auxiliary.infrastructure.common.CommandUtil;
+import cn.goldencis.auxiliary.infrastructure.execution.entity.ExecResult;
 import org.apache.commons.exec.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -167,11 +168,15 @@ class AuxiliaryApplicationTests {
         String filePath = "/gdsoft/soft/vops/logs/vops-config-hub-error.2023-07-03.log";
         String searchString = "ss";
         try {
-            String[] cmd = new String[]{"bash", "-c", "cat /gdsoft/soft/vops/logs/viid.2023-06-19.log"};
+            String[] cmd = new String[]{"bash", "-c", "curl -XPUT -H \"Content-Type: application/json\" http://127.0.0.1/_all/_settings -d '{\"index.blocks.read_only_allow_delete\": null}'"};
             Process process = Runtime.getRuntime().exec(cmd);
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
             String line;
             while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+            while ((line = errorReader.readLine()) != null) {
                 System.out.println(line);
             }
         } catch (ExecuteException e) {
@@ -179,6 +184,11 @@ class AuxiliaryApplicationTests {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void test4() {
+        ExecResult execResult = CommandUtil.commandExecute2("curl -XPUT -H \"Content-Type: application/json\" http://127.0.0.1:9200/_all/_settings -d '{\"index.blocks.read_only_allow_delete\": false}'");
     }
 
     @Test
