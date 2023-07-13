@@ -13,9 +13,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -28,6 +26,7 @@ import java.util.stream.Collectors;
  **/
 @Slf4j
 public class CommandUtil {
+    @Deprecated
     public static String execute(String command) {
         try {
             CommandLine cmdLine = CommandLine.parse(command);
@@ -35,50 +34,39 @@ public class CommandUtil {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream);
             executor.setStreamHandler(streamHandler);
-            int exitValue = executor.execute(cmdLine);
-            String output = outputStream.toString();
-            return output;
+            executor.execute(cmdLine);
+            return outputStream.toString();
         } catch (Exception e) {
             log.info("【日志抽取异常】:{}", e.toString());
         }
         return null;
     }
 
-    public static String commandExecute2(String command) {
+    public static ExecResult commandExecute2(String command) {
+        String[] cmd = new String[]{"bash", "-c", command};
         try {
-            String[] cmd = new String[]{"bash", "-c", command};
             Process process = Runtime.getRuntime().exec(cmd);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()), 1024 * 1024);
-            BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()), 1024 * 1024);
-            StringBuilder stringBuilder = new StringBuilder();
-            String line;
-
-            while ((line = reader.readLine()) != null) {
-                stringBuilder.append(line);
+            // 读取进程的输出
+            StringBuffer result = getResult(process);
+            int code = process.waitFor();
+            if (code == 0) {
+                return new ExecResult(0, result.toString(), null);
+            } else {
+                return new ExecResult(1, result.toString(), null);
             }
-            while ((line = errorReader.readLine()) != null) {
-                stringBuilder.append(line);
-            }
-            int i = process.waitFor();
-            reader.close();
-            errorReader.close();
-            return stringBuilder.toString();
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             throw new RuntimeException("Error while executing command", e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         }
     }
 
     public static ExecResult commandExecute(String command) {
         try {
-            HashMap<String, String> info = new HashMap<>();
             String[] cmd = new String[]{"bash", "-c", command};
             Process process = Runtime.getRuntime().exec(cmd);
             InputStreamReader inputStreamReader = new InputStreamReader(process.getInputStream());
             BufferedReader reader = new BufferedReader(inputStreamReader);
             String line;
-            Integer lineNum = 0;
+            int lineNum = 0;
             StringBuilder errorInfo = new StringBuilder();
             while ((line = reader.readLine()) != null) {
                 errorInfo.append("\n").append(line);
@@ -94,34 +82,52 @@ public class CommandUtil {
         return null;
     }
 
-    public static String bashExecute(String bash) {
+    public static ExecResult bashExecute(String bash) {
         try {
             // 创建一个ProcessBuilder对象，设置要执行的命令
             ProcessBuilder processBuilder = new ProcessBuilder(bash);
             // 启动进程并等待其完成
             Process process = processBuilder.start();
-            boolean exitCode = process.waitFor(50L, TimeUnit.SECONDS);
             // 读取进程的输出
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line;
-            StringBuffer result = new StringBuffer();
-            while ((line = reader.readLine()) != null) {
-                // 处理进程输出
-                result.append("\n").append(line);
+            StringBuffer result = getResult(process);
+            int code = process.waitFor();
+            if (code == 0) {
+                return new ExecResult(0, result.toString(), null);
+            } else {
+                return new ExecResult(1, result.toString(), null);
             }
-            return result.toString();
         } catch (Exception e) {
             log.info("【脚本】:{}执行Exception:{}", bash, e.toString());
         }
         return null;
     }
 
+    private static StringBuffer getResult(Process process) throws IOException {
+        StringBuffer result = new StringBuffer();
+        String line;
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream())); BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()), 1024 * 1024)) {
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+            while ((line = errorReader.readLine()) != null) {
+                result.append(line);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            process.getInputStream().close();
+            process.getErrorStream().close();
+        }
+        return result;
+    }
+
+    @Deprecated
     public static String execute2(String command) {
         try {
             List<String> splits = splits(command);
             String[] strings = listToStringArray(splits);
             Process process = Runtime.getRuntime().exec(strings);
-            int i = process.waitFor();
+            process.waitFor();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
             while ((line = reader.readLine()) != null) {

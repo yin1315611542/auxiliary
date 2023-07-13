@@ -10,7 +10,7 @@ import javax.persistence.EntityManager;
 /**
 * 使用QueryDSL的功能时，会依赖使用到JPAQueryFactory，而JPAQueryFactory在这里依赖使用EntityManager，
 * 所以在主类中做如下配置，使得Spring自动帮我们注入EntityManager与自动管理JPAQueryFactory
-* @author NJ
+ * @author yinhd
 * @create 2022/12/5 15:12
 */
 @Configuration

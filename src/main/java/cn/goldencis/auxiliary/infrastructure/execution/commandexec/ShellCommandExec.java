@@ -28,9 +28,11 @@ public class ShellCommandExec extends AbstractExec implements ExecInterface {
         String shName = step.getExcContent();
         String bash = path + File.separator + shName;  // 指定要执行的shell脚本文件路径
         log.info("【执行脚本路径】:{}", bash);
-        String result = CommandUtil.bashExecute(bash);
-        log.info("【脚本执行结果】:{}", result);
-        return null;
+        ExecResult execResult = CommandUtil.bashExecute(bash);
+        if (execResult != null) {
+            log.info("【脚本执行结果】:{}", execResult.getMessage());
+        }
+        return execResult;
     }
 
     @Override
