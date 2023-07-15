@@ -9,7 +9,7 @@ import cn.goldencis.auxiliary.domain.solution.Solution;
 import cn.goldencis.auxiliary.domain.solution.service.SolutionService;
 import cn.goldencis.auxiliary.domain.step.Step;
 import cn.goldencis.auxiliary.domain.step.service.StepService;
-import cn.goldencis.auxiliary.infrastructure.extract.entity.MyException;
+import cn.goldencis.auxiliary.infrastructure.extract.entity.AuxException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +36,7 @@ public class ErrorFixService {
     @Autowired
     SchemeHandler schemeHandler;
 
-    public void fix(MyException exception){
+    public void fix(AuxException exception) {
         //定位问题
         List<Problem> problems = problemService.determineProblem(exception);
         Map<Solution,List<Step> > solutionMap = new HashMap<>();
@@ -45,16 +45,14 @@ public class ErrorFixService {
             //确定解决方案
             List<Solution> solutions = solutionService.determineSolution(problem);
             //生成执行方案
-            for (Solution solution: solutions) {
-                List<Step> steps = stepService.finStepByIds(solution.init().getStepIds());
-                solutionMap.put(solution,steps);
+            for (Solution solution : solutions) {
+                List<Step> steps = stepService.finStepBySolutionId(solution.getId());
+                solutionMap.put(solution, steps);
             }
-            Scheme scheme = schemeService.makeAScheme(exception,problem,solutionMap);
+            Scheme scheme = schemeService.makeAScheme(exception, problem, solutionMap);
             //执行方案
             schemeHandler.ImplementScheme(scheme);
         }
-
-
     }
 
 

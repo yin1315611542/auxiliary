@@ -11,5 +11,7 @@ import java.util.List;
  * @create: 2023-06-27 15:53
  **/
 public interface StepService {
-    public List<Step> finStepByIds(List<Long> ids);
+    List<Step> finStepByIds(List<Long> ids);
+
+    List<Step> finStepBySolutionId(Long solutionId);
 }

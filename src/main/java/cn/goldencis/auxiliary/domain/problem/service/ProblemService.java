@@ -1,7 +1,7 @@
 package cn.goldencis.auxiliary.domain.problem.service;
 
-import cn.goldencis.auxiliary.infrastructure.extract.entity.MyException;
 import cn.goldencis.auxiliary.domain.problem.Problem;
+import cn.goldencis.auxiliary.infrastructure.extract.entity.AuxException;
 
 import java.util.List;
 
@@ -13,9 +13,9 @@ import java.util.List;
  **/
 public interface ProblemService {
     //确定问题
-     List<Problem> determineProblem(MyException myException);
+    List<Problem> determineProblem(AuxException auxException);
 
-     List<Problem> findProblemByKeyWords(String keyWords);
+    List<Problem> findProblemByKeyWords(AuxException auxException);
 
      List<Problem> findProblemByCauseChain(String causeChain);
 

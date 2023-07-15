@@ -3,7 +3,7 @@ package cn.goldencis.auxiliary.domain.scheme;
 import cn.goldencis.auxiliary.domain.problem.Problem;
 import cn.goldencis.auxiliary.domain.solution.Solution;
 import cn.goldencis.auxiliary.domain.step.Step;
-import cn.goldencis.auxiliary.infrastructure.extract.entity.MyException;
+import cn.goldencis.auxiliary.infrastructure.extract.entity.AuxException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @Accessors(chain = true)
 public class Scheme {
 
-    private MyException myException;
+    private AuxException auxException;
 
     private Problem problem;
 
@@ -42,8 +42,8 @@ public class Scheme {
         this.solutions = solutions;
     }
 
-    public Scheme(MyException myException, Problem problem, Map<Solution, List<Step>> solutions) {
-        this.myException = myException;
+    public Scheme(AuxException auxException, Problem problem, Map<Solution, List<Step>> solutions) {
+        this.auxException = auxException;
         this.problem = problem;
         this.solutions = solutions;
     }

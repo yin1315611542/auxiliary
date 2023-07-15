@@ -1,11 +1,10 @@
 package cn.goldencis.auxiliary.domain.loginfo.problemanalysis.handler;
 
 import cn.goldencis.auxiliary.application.errorfix.ErrorFixService;
-import cn.goldencis.auxiliary.infrastructure.extract.entity.MyException;
 import cn.goldencis.auxiliary.domain.loginfo.ErrorInfo;
-import cn.goldencis.auxiliary.domain.loginfo.enumeration.ErrorInfoType;
 import cn.goldencis.auxiliary.domain.loginfo.problemanalysis.AbstractAnalysis;
 import cn.goldencis.auxiliary.domain.loginfo.problemanalysis.AnalysisHandler;
+import cn.goldencis.auxiliary.infrastructure.extract.entity.AuxException;
 import cn.goldencis.auxiliary.infrastructure.reduction.ExceptionService;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -30,8 +29,8 @@ public class BaseAnalysisHandler extends AbstractAnalysis implements AnalysisHan
     ErrorFixService errorFixService;
     @Override
     public void handleError(ErrorInfo errorInfo) {
-        MyException myException = exceptionService.createExceptionFromError(errorInfo.getMessage());
-        errorFixService.fix(myException);
+        AuxException auxException = exceptionService.createExceptionFromError(errorInfo.getMessage());
+        errorFixService.fix(auxException);
     }
 
     @Override

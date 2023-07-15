@@ -1,5 +1,7 @@
 package cn.goldencis.auxiliary.domain.step;
 
+import cn.goldencis.auxiliary.infrastructure.condition.ConditionType;
+import cn.goldencis.auxiliary.infrastructure.condition.ConditionTypeConverter;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -42,8 +44,6 @@ public class Step implements Serializable {
 
     private String excContent;
 
-    private static final String PATTERN = "%\\{[^}]*}";
-
     private LocalDateTime createTime;
 
     private LocalDateTime updateTime;
@@ -55,13 +55,21 @@ public class Step implements Serializable {
     private Long solutionId;
 
     private String execResult;
+
     private String returnType;
-    private String parameter;
+
+    private static final String PATTERN = "%\\{[^}]*}";
+
     private String parameterType;
 
     @Transient
     private List<Step> childStep = new ArrayList<>();
+    @Transient
+    private List<JsonNode> parameter;
+
     private String excCondition;
+    @Convert(converter = ConditionTypeConverter.class)
+    private ConditionType conditionType;
 
     public static boolean containsPlaceholder(String str) {
         if (ObjectUtils.isEmpty(str))
@@ -113,13 +121,13 @@ public class Step implements Serializable {
                 String key = entry.getKey();
                 JsonNode value = entry.getValue();
                 evaluationContext.setVariable(key, value.asText());
-                //创建解析器
-                SpelExpressionParser parser = new SpelExpressionParser();
-                //创建解析器上下文
-                ParserContext context = new TemplateParserContext("%{", "}");
-                Expression expression = parser.parseExpression(cmd, context);
-                cmds.append(expression.getValue(evaluationContext, String.class)).append(join);
             });
+            //创建解析器
+            SpelExpressionParser parser = new SpelExpressionParser();
+            //创建解析器上下文
+            ParserContext context = new TemplateParserContext("%{", "}");
+            Expression expression = parser.parseExpression(cmd, context);
+            cmds.append(expression.getValue(evaluationContext, String.class)).append(join);
         });
         return cmds.toString();
     }

@@ -3,7 +3,7 @@ package cn.goldencis.auxiliary.domain.scheme.handler;
 import cn.goldencis.auxiliary.domain.scheme.Scheme;
 import cn.goldencis.auxiliary.domain.solution.Solution;
 import cn.goldencis.auxiliary.domain.step.Step;
-import cn.goldencis.auxiliary.infrastructure.common.ELUtils;
+import cn.goldencis.auxiliary.infrastructure.condition.Discriminator;
 import cn.goldencis.auxiliary.infrastructure.execution.ExecDispatcher;
 import cn.goldencis.auxiliary.infrastructure.execution.entity.ExecResult;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -24,6 +24,8 @@ import java.util.Map;
 public class SchemeHandler {
     @Autowired
     ExecDispatcher dispatcher;
+    @Autowired
+    Discriminator discriminator;
 
     public void ImplementScheme(Scheme scheme) {
         scheme.init();
@@ -43,12 +45,16 @@ public class SchemeHandler {
     public boolean execStepOfSolution(Step step, String paramStr) {
         log.info("--【执行步骤】：{}", step.getStepName());
         List<JsonNode> params = this.params(paramStr, step.getParameterType());
-        step.initExcContent(params);
+        step.initExcContent(params).initExcCondition(params).setParameter(params);
+        //先判断是否满足执行条件
+        if (!discriminator.distinguish(step)) {
+            return false;
+        }
         ExecResult execResult = dispatcher.doDispatch(step);
         if (execResult.getCode() == 1) {
             return false;
         } else {
-            execStep(step.getChildStep(), execResult.getMessage());
+            execStep(step.getChildStep(), String.valueOf(execResult.getMessage()));
         }
         return true;
     }
@@ -56,15 +62,15 @@ public class SchemeHandler {
     private boolean execStep(List<Step> steps, String paramStr) {
         for (Step step : steps) {
             List<JsonNode> params = this.params(paramStr, step.getParameterType());
-            step.initExcContent(params).initExcCondition(params);
+            step.initExcContent(params).initExcCondition(params).setParameter(params);
             //先判断是否满足执行条件
-            if (!ifExcCondition(step.getExcCondition())) {
+            if (!discriminator.distinguish(step)) {
                 continue;
             }
             log.info("--【执行步骤】：{}", step.getStepName());
             ExecResult execResult = dispatcher.doDispatch(step);
             if (execResult.getCode() == 0) {
-                return execStep(step.getChildStep(), execResult.getMessage());
+                return execStep(step.getChildStep(), String.valueOf(execResult.getMessage()));
             }
         }
         return false;
@@ -91,10 +97,5 @@ public class SchemeHandler {
         }
     }
 
-    public Boolean ifExcCondition(String el) {
-        if (ObjectUtils.isEmpty(el)) {
-            return true;
-        }
-        return ELUtils.evaluate(el);
-    }
+
 }

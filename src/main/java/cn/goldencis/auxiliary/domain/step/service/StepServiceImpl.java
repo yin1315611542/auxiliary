@@ -25,4 +25,11 @@ public class StepServiceImpl implements StepService{
     public List<Step> finStepByIds(List<Long> ids) {
         return Lists.newArrayList(stepRepository.findAll(step.id.in(ids)));
     }
+
+    @Override
+    public List<Step> finStepBySolutionId(Long solutionId) {
+        return Lists.newArrayList(stepRepository.findAll(step.solutionId.eq(solutionId)));
+    }
+
+
 }
