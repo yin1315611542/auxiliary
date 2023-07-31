@@ -1,6 +1,6 @@
 package cn.goldencis.auxiliary.infrastructure.reduction;
 
-import cn.goldencis.auxiliary.infrastructure.extract.entity.MyException;
+import cn.goldencis.auxiliary.infrastructure.extract.entity.AuxException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +13,12 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class ExceptionService {
-    public MyException createExceptionFromError(String error) {
+    public AuxException createExceptionFromError(String error) {
         String[] lines = error.split("\\n");
         String message = lines[1];
         String stackTrace = error.substring(error.indexOf("\n", error.indexOf("\n") + 1) + 1);
         Throwable cause = reduction(stackTrace, 0);
-        return new MyException(message, cause);
+        return new AuxException(message, cause);
     }
 
     public Throwable reduction(String stackTrace, int index) {
@@ -37,12 +37,12 @@ public class ExceptionService {
         }
     }
 
-    public MyException createCauseFromStackTrace(String causeStackTrace,Throwable cause) {
+    public AuxException createCauseFromStackTrace(String causeStackTrace, Throwable cause) {
         String[] causeLines = causeStackTrace.split("\\n");
         String causeType = causeLines[0].substring("Caused by: ".length());
         String causeMessage = causeLines[1];
-        MyException myException = new MyException(causeMessage, cause);
-        myException.setType(causeType);
-        return myException;
+        AuxException auxException = new AuxException(causeMessage, cause);
+        auxException.setType(causeType);
+        return auxException;
     }
 }

@@ -47,12 +47,12 @@ public class CommandUtil {
         try {
             Process process = Runtime.getRuntime().exec(cmd);
             // 读取进程的输出
-            StringBuffer result = getResult(process);
+            ExecResult result = getResult(process);
             int code = process.waitFor();
             if (code == 0) {
-                return new ExecResult(0, result.toString(), null);
+                return result.setCode(0);
             } else {
-                return new ExecResult(1, result.toString(), null);
+                return result.setCode(1);
             }
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException("Error while executing command", e);
@@ -67,15 +67,15 @@ public class CommandUtil {
             BufferedReader reader = new BufferedReader(inputStreamReader);
             String line;
             int lineNum = 0;
-            StringBuilder errorInfo = new StringBuilder();
+            ExecResult execResult = new ExecResult();
             while ((line = reader.readLine()) != null) {
-                errorInfo.append("\n").append(line);
+                execResult.getMessage().append("\n").append(line);
                 lineNum++;
             }
             process.getInputStream().close();
             inputStreamReader.close();
             reader.close();
-            return new ExecResult(0, errorInfo.toString(), lineNum);
+            return execResult.setCode(0);
         } catch (IOException e) {
             log.info("command2执行命令异常{}", e.toString());
         }
@@ -89,12 +89,13 @@ public class CommandUtil {
             // 启动进程并等待其完成
             Process process = processBuilder.start();
             // 读取进程的输出
-            StringBuffer result = getResult(process);
+            ExecResult result = getResult(process);
+
             int code = process.waitFor();
             if (code == 0) {
-                return new ExecResult(0, result.toString(), null);
+                return result.setCode(0);
             } else {
-                return new ExecResult(1, result.toString(), null);
+                return result.setCode(1);
             }
         } catch (Exception e) {
             log.info("【脚本】:{}执行Exception:{}", bash, e.toString());
@@ -102,15 +103,15 @@ public class CommandUtil {
         return null;
     }
 
-    private static StringBuffer getResult(Process process) throws IOException {
-        StringBuffer result = new StringBuffer();
+    private static ExecResult getResult(Process process) throws IOException {
         String line;
+        ExecResult execResult = new ExecResult();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream())); BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()), 1024 * 1024)) {
             while ((line = reader.readLine()) != null) {
-                result.append(line);
+                execResult.getMessage().append(line);
             }
             while ((line = errorReader.readLine()) != null) {
-                result.append(line);
+                execResult.getErrorMessage().append(line);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -118,7 +119,7 @@ public class CommandUtil {
             process.getInputStream().close();
             process.getErrorStream().close();
         }
-        return result;
+        return execResult;
     }
 
     @Deprecated

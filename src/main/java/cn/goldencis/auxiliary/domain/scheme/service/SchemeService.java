@@ -4,7 +4,7 @@ import cn.goldencis.auxiliary.domain.problem.Problem;
 import cn.goldencis.auxiliary.domain.scheme.Scheme;
 import cn.goldencis.auxiliary.domain.solution.Solution;
 import cn.goldencis.auxiliary.domain.step.Step;
-import cn.goldencis.auxiliary.infrastructure.extract.entity.MyException;
+import cn.goldencis.auxiliary.infrastructure.extract.entity.AuxException;
 
 import java.util.List;
 import java.util.Map;
@@ -22,5 +22,5 @@ public interface SchemeService {
 
      Scheme makeAScheme(Problem problem, Map<Solution,List<Step>> solutions);
 
-     Scheme makeAScheme(MyException myException,Problem problem, Map<Solution,List<Step>> solutions);
+    Scheme makeAScheme(AuxException auxException, Problem problem, Map<Solution, List<Step>> solutions);
 }

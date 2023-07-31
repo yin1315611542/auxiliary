@@ -10,16 +10,16 @@ import org.springframework.util.ObjectUtils;
  * @create: 2023-06-21 16:13
  **/
 @Data
-public class MyException extends Exception{
+public class AuxException extends Exception {
     private String type;
 
     private String  causeChain;
 
-    public MyException(String message, Throwable cause) {
+    public AuxException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public MyException() {
+    public AuxException() {
     }
 
 
@@ -44,7 +44,7 @@ public class MyException extends Exception{
         StringBuilder causeChain = new StringBuilder(this.getMessage());
         Throwable cause = this.getCause();
         while (!ObjectUtils.isEmpty(cause)){
-            causeChain.append(((MyException) cause).getType()).append(":");
+            causeChain.append(((AuxException) cause).getType()).append(":");
             cause = cause.getCause();
         }
 

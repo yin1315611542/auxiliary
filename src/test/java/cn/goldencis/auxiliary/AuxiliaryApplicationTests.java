@@ -155,11 +155,11 @@ class AuxiliaryApplicationTests {
 
     @Test
     public void command() {
-        String logContent = CommandUtil.bashExecute("cat /gdsoft/soft/vops/logs/vops-config-hub-error.2023-07-06.log").getMessage();
-        if (logContent == null) {
+        StringBuffer message = CommandUtil.bashExecute("cat /gdsoft/soft/vops/logs/vops-config-hub-error.2023-07-06.log").getMessage();
+        if (message == null) {
             System.out.printf("空\n");
         } else {
-            System.out.printf(logContent);
+            System.out.printf(message.toString());
         }
     }
 
@@ -189,6 +189,11 @@ class AuxiliaryApplicationTests {
     @Test
     public void test4() {
         ExecResult execResult = CommandUtil.commandExecute2("curl -XPUT -H \"Content-Type: application/json\" http://127.0.0.1:9200/_all/_settings -d '{\"index.blocks.read_only_allow_delete\": false}'");
+    }
+
+    @Test
+    public void test5() {
+        ExecResult execResult = CommandUtil.commandExecute2("mysql -uroot -pgoldencis -e \"SELECT JSON_ARRAYAGG(JSON_OBJECT('id', id, 'LOCKED', IF(locked, 1, 0))) as ''  FROM  gd_container_gateway.databasechangeloglock\" | sed 's/\\\\\\//\\//g'");
     }
 
     @Test

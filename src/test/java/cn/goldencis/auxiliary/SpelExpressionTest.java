@@ -21,7 +21,7 @@ public class SpelExpressionTest {
     //测试SPEL表达式的填装及解析
     @Test
     public void test1() throws IOException {
-        String s = CommandUtil.commandExecute2("curl -sS -XGET \"http://localhost:9200/_cat/indices\" | awk '{print $3}' | while read index; do curl -sS -XGET \"http://localhost:9200/$index/_settings\" | jq '.[].settings.index.blocks.read_only_allow_delete' | grep -q \"true\" && echo \"{\\\"name\\\":\\\"$index\\\"}\"; done | sed -e ':a' -e 'N' -e '$!ba' -e 's/\\n/,/g' | sed 's/^/[/' | sed 's/$/]/'s\n").getMessage();
+        String s = CommandUtil.commandExecute2("curl -sS -XGET \"http://localhost:9200/_cat/indices\" | awk '{print $3}' | while read index; do curl -sS -XGET \"http://localhost:9200/$index/_settings\" | jq '.[].settings.index.blocks.read_only_allow_delete' | grep -q \"true\" && echo \"{\\\"name\\\":\\\"$index\\\"}\"; done | sed -e ':a' -e 'N' -e '$!ba' -e 's/\\n/,/g' | sed 's/^/[/' | sed 's/$/]/'s\n").getMessage().toString();
         ObjectMapper objectMapper = new ObjectMapper();
         List<JsonNode> jsonNodes = objectMapper.readValue(s, new TypeReference<List<JsonNode>>() {
         });

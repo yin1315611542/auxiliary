@@ -1,19 +1,14 @@
 package cn.goldencis.auxiliary.domain.solution;
 
-import cn.goldencis.auxiliary.infrastructure.extract.entity.MyException;
 import cn.goldencis.auxiliary.domain.step.Step;
+import cn.goldencis.auxiliary.infrastructure.extract.entity.AuxException;
 import com.google.common.collect.Lists;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.springframework.util.ObjectUtils;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -50,7 +45,7 @@ public class Solution implements Serializable {
     private List<Step> steps;
 
     @Transient
-    private MyException myException;
+    private AuxException auxException;
 
     private LocalDateTime createTime;
 

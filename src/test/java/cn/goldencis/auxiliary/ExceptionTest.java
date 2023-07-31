@@ -1,7 +1,7 @@
 package cn.goldencis.auxiliary;
 
 import cn.goldencis.auxiliary.application.errorfix.ErrorFixService;
-import cn.goldencis.auxiliary.infrastructure.extract.entity.MyException;
+import cn.goldencis.auxiliary.infrastructure.extract.entity.AuxException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,8 +13,23 @@ public class ExceptionTest {
 
     @Test
     public void test1() {
-        MyException myException = new MyException();
-        myException.setCauseChain("11");
-        errorFixService.fix(myException);
+        AuxException auxException = new AuxException();
+        auxException.setCauseChain("11");
+        errorFixService.fix(auxException);
+    }
+
+    @Test
+    public void test() {
+        AuxException auxException = new AuxException();
+        auxException.setCauseChain("22");
+        errorFixService.fix(auxException);
+    }
+
+    @Test
+    public void test3() {
+        AuxException auxException = new AuxException();
+        auxException.setCauseChain("33");
+        auxException.setCause(new Exception("key"));
+        errorFixService.fix(auxException);
     }
 }
