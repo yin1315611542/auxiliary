@@ -22,6 +22,6 @@ public class DailySelfCheckJob implements Job {
         ProblemService problemService = SpringUtil.getBean("problemServiceImpl");
         List<Problem> problems = problemService.finSelfCheckProblem();
         ErrorFixService errorFixService = SpringUtil.getBean("errorFixService");
-        problems.forEach(problem -> errorFixService.fix(problem));
+        problems.forEach(errorFixService::fix);
     }
 }
