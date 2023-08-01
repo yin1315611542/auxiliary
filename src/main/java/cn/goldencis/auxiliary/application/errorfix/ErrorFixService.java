@@ -39,28 +39,30 @@ public class ErrorFixService {
     public void fix(AuxException exception) {
         //定位问题
         List<Problem> problems = problemService.determineProblem(exception);
-        Map<Solution,List<Step> > solutionMap = new HashMap<>();
-        //遍历问题，确定方案
         for (Problem problem : problems) {
-            //确定解决方案
-            List<Solution> solutions = solutionService.determineSolution(problem);
-            //生成执行方案
-            for (Solution solution : solutions) {
-                List<Step> steps = stepService.finStepBySolutionId(solution.getId());
-                solutionMap.put(solution, steps);
-            }
-            Scheme scheme = schemeService.makeAScheme(exception, problem, solutionMap);
+            //形成方案
+            Scheme scheme = schemeService.makeAScheme(exception, problem,  generateSolutionMap(problem));
             //执行方案
             schemeHandler.ImplementScheme(scheme);
         }
     }
 
 
-    public Boolean fix(){
-        //读取日志
-        //定位问题
+    public Boolean fix(Problem problem){
+        Scheme scheme = schemeService.makeAScheme(null, problem,  generateSolutionMap(problem));
+        schemeHandler.ImplementScheme(scheme);
+        return true;
+    }
+
+    public Map<Solution,List<Step>> generateSolutionMap(Problem problem){
+        Map<Solution,List<Step> > solutionMap = new HashMap<>();
         //确定解决方案
-        //执行解决方案
-        return null;
+        List<Solution> solutions = solutionService.determineSolution(problem);
+        //生成执行方案
+        for (Solution solution : solutions) {
+            List<Step> steps = stepService.finStepBySolutionId(solution.getId());
+            solutionMap.put(solution, steps);
+        }
+        return solutionMap;
     }
 }

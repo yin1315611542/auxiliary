@@ -1,6 +1,6 @@
 package cn.goldencis.auxiliary;
 
-import cn.goldencis.auxiliary.application.selfcheck.SelfCheckJob;
+import cn.goldencis.auxiliary.application.selfcheck.LogSelfCheckJob;
 import org.junit.jupiter.api.Test;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
@@ -16,7 +16,7 @@ public class SimpleQuartzTest {
         SchedulerFactory schedulerFactory = new StdSchedulerFactory();
         Scheduler scheduler = schedulerFactory.getScheduler();
         // 2、创建JobDetail实例，并与SimpleJob类绑定(Job执行内容)
-        JobDetail jobDetail = JobBuilder.newJob(SelfCheckJob.class)
+        JobDetail jobDetail = JobBuilder.newJob(LogSelfCheckJob.class)
                 .withIdentity("job1", "group1")
                 .build();
         // 3、构建Trigger（触发器），定义执行频率和时长

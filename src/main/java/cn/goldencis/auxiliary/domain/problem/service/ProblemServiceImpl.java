@@ -2,6 +2,7 @@ package cn.goldencis.auxiliary.domain.problem.service;
 
 import cn.goldencis.auxiliary.domain.problem.Problem;
 import cn.goldencis.auxiliary.domain.problem.QProblem;
+import cn.goldencis.auxiliary.domain.problem.enumtype.ProblemType;
 import cn.goldencis.auxiliary.domain.problem.repository.ProblemRepository;
 import cn.goldencis.auxiliary.infrastructure.extract.entity.AuxException;
 import com.google.common.collect.Lists;
@@ -51,6 +52,10 @@ public class ProblemServiceImpl implements ProblemService{
 
     public List<Problem> findProblemByCauseChain(String causeChain){
         return Lists.newArrayList(problemRepository.findAll(problem.causeChain.eq(causeChain)));
+    }
+
+    public List<Problem> finSelfCheckProblem(){
+        return Lists.newArrayList(problemRepository.findAll(problem.problemType.eq(ProblemType.SelfCheckProblem)));
     }
 
 }

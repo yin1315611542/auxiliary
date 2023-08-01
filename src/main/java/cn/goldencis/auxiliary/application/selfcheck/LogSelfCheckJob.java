@@ -13,7 +13,7 @@ import org.springframework.util.ObjectUtils;
 import java.util.List;
 
 
-public class SelfCheckJob implements Job {
+public class LogSelfCheckJob implements Job {
 
     @SneakyThrows
     @Override
@@ -22,7 +22,7 @@ public class SelfCheckJob implements Job {
         List<Hub> hubs = SpringUtil.getBean("hubs");
         String date = DateUtil.YYYY_MM_DD();
         for (Hub hub : hubs) {
-            String markTime = logExtract.extract(hub.getLogPath(), hub.getName() + "-error." + "2023-07-03" + ".log", hub.getLogExtractTime());
+            String markTime = logExtract.extract(hub.getLogPath(), hub.getName() + "-error." + date + ".log", hub.getLogExtractTime());
             if (!ObjectUtils.isEmpty(markTime)) {
                 hub.setLogExtractTime(markTime);
             }

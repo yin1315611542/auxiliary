@@ -1,9 +1,12 @@
 package cn.goldencis.auxiliary.domain.problem;
 
+import cn.goldencis.auxiliary.domain.problem.enumtype.ProblemType;
+import cn.goldencis.auxiliary.domain.problem.enumtype.ProblemTypeConverter;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -28,7 +31,8 @@ public class Problem implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String problemType;
+    @Convert(converter = ProblemTypeConverter.class)
+    private ProblemType problemType;
 
     private Long souId;
 

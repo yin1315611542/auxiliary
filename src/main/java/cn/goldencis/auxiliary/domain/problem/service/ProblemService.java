@@ -12,12 +12,20 @@ import java.util.List;
  * @create: 2023-06-25 17:18
  **/
 public interface ProblemService {
-    //确定问题
+    /**
+     * 根据异常确定问题
+     * @param auxException
+     */
     List<Problem> determineProblem(AuxException auxException);
 
     List<Problem> findProblemByKeyWords(AuxException auxException);
 
-     List<Problem> findProblemByCauseChain(String causeChain);
+    List<Problem> findProblemByCauseChain(String causeChain);
+
+    /**
+     * 查询自检类问题
+     */
+    List<Problem> finSelfCheckProblem();
 
 
 }
