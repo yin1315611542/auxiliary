@@ -37,10 +37,13 @@ public class LogExtract {
                 : String.format(interceptionMethod2, interceptionLength, extractTime, path + File.separator + file);
         //执行命令
         ExecResult execResult = CommandUtil.commandExecute(command);
-        String logContent = null;
-        if (execResult != null) {
-            logContent = Objects.requireNonNull(execResult.getMessage()).toString();
+
+        if(ObjectUtils.isEmpty(execResult.getMessage())){
+            log.info("【{}】截取日志为空",file);
+            return null;
         }
+        String logContent = Objects.requireNonNull(execResult.getMessage()).toString();
+
         log.info("【日志读取】命令：【{}】, 文件：【{}】, 截取起始时间:【{}】, 长度【{}】", command, file, extractTime, ObjectUtils.isEmpty(logContent) ? 0 : logContent.length());
         //分割错误日志
         if (!ObjectUtils.isEmpty(logContent)) {

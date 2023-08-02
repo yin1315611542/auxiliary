@@ -77,7 +77,7 @@ public class SchemeHandler {
     }
 
     public List<JsonNode> params(String paramStr, String type) {
-        if (ObjectUtils.isEmpty(paramStr) && ObjectUtils.isEmpty(type)) {
+        if (ObjectUtils.isEmpty(paramStr) || ObjectUtils.isEmpty(type)) {
             return null;
         }
         try {

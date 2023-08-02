@@ -1,6 +1,7 @@
 package cn.goldencis.auxiliary.infrastructure.execution.commandexec;
 
 import cn.goldencis.auxiliary.domain.step.Step;
+import cn.goldencis.auxiliary.domain.step.enumstep.StepType;
 import cn.goldencis.auxiliary.infrastructure.common.CommandUtil;
 import cn.goldencis.auxiliary.infrastructure.execution.AbstractExec;
 import cn.goldencis.auxiliary.infrastructure.execution.ExecInterface;
@@ -37,6 +38,6 @@ public class ShellCommandExec extends AbstractExec implements ExecInterface {
 
     @Override
     public Boolean support(Step step) {
-        return false;
+        return StepType.Script.equals(step.getStepType());
     }
 }

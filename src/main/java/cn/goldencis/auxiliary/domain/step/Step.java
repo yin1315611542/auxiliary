@@ -1,5 +1,7 @@
 package cn.goldencis.auxiliary.domain.step;
 
+import cn.goldencis.auxiliary.domain.step.enumstep.StepType;
+import cn.goldencis.auxiliary.domain.step.enumstep.StepTypeConverter;
 import cn.goldencis.auxiliary.infrastructure.condition.ConditionType;
 import cn.goldencis.auxiliary.infrastructure.condition.ConditionTypeConverter;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -40,7 +42,8 @@ public class Step implements Serializable {
 
     private String StepName;
 
-    private String StepType;
+    @Convert(converter = StepTypeConverter.class)
+    private StepType StepType;
 
     private String excContent;
 

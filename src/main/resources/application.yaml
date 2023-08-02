@@ -13,4 +13,4 @@ spring:
 auxiliary:
   sh:
     #上传脚本存储路径
-    path: "/auxiliary/auxiliary"
+    path: "/var/aux/auxiliary/script"

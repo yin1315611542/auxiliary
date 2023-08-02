@@ -25,7 +25,8 @@ public class ExecDispatcher {
         if (execHandler!=null){
             return execHandler.exec(step);
         }
-        return null;
+        throw new RuntimeException("【"+step.getStepName()+"】"+"未匹配到此步骤的步骤类型，请检查stepType字段是否正确");
+
     }
 
     private ExecInterface getExecHandler(Step step){

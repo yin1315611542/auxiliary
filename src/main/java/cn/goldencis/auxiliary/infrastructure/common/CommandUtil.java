@@ -69,13 +69,13 @@ public class CommandUtil {
             int lineNum = 0;
             ExecResult execResult = new ExecResult();
             while ((line = reader.readLine()) != null) {
-                execResult.getMessage().append("\n").append(line);
+                execResult.getMessage().append(line).append("\n");
                 lineNum++;
             }
             process.getInputStream().close();
             inputStreamReader.close();
             reader.close();
-            return execResult.setCode(0);
+            return execResult.setCode(0).setLineNumber(lineNum);
         } catch (IOException e) {
             log.info("command2执行命令异常{}", e.toString());
         }

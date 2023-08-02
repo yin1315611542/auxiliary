@@ -17,7 +17,7 @@ public class SelfCheckTaskManager {
     @PostConstruct
     private void addSelfCheckTask() {
         try {
-            quartzManager.addJob("logSelfCheck", "selfCheck", LogSelfCheckJob.class, "0/10 * * * * ?", null);
+//            quartzManager.addJob("logSelfCheck", "selfCheck", LogSelfCheckJob.class, "0/10 * * * * ?", null);
             quartzManager.addJob("dailySelfCheck","selfCheck",DailySelfCheckJob.class,"0/10 * * * * ?",null);
         } catch (SchedulerException e) {
             log.info("logSelfCheckJob添加异常{}", e.toString());
