@@ -1,6 +1,6 @@
-#!/bin/bash
+# 作用：Elasticsearch存储数据所在目录空间超过70%，清理各个索引90天之前的数据
 
-# Elasticsearch 集群地址
+# Elasticsearch 地址
 ELASTICSEARCH_HOST="localhost:9200"
 
 # 获取 /home 目录的占用空间和使用率
@@ -12,10 +12,10 @@ if [ $HOME_USAGE_PERCENT -gt 70 ]; then
   # 获取所有索引名称
   INDEX_NAMES=$(curl -s "$ELASTICSEARCH_HOST/_cat/indices" | awk '{print $3}')
 
-  # 循环删除每个索引前三个月的数据
+  # 循环删除每个索引90之前的数据
   for INDEX_NAME in $INDEX_NAMES; do
     echo -n "删除索引【$INDEX_NAME】前三个月的数据  "
-    QUERY="{\"query\":{\"range\":{\"updateTime\":{\"lt\":\"now-0d/d\"}}}}"
+    QUERY="{\"query\":{\"range\":{\"updateTime\":{\"lt\":\"now-90d/d\"}}}}"
     curl -X POST "$ELASTICSEARCH_HOST/$INDEX_NAME/_delete_by_query" -H 'Content-Type: application/json' -d "$QUERY"
     echo
   done
