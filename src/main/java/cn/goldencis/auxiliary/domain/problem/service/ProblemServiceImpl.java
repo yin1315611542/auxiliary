@@ -28,13 +28,17 @@ public class ProblemServiceImpl implements ProblemService{
     @Autowired
     JPAQueryFactory jpaQueryFactory;
 
+    private static final Integer ON = 0; //问题状态 在用
+
+    private static final Integer OFF = 1;//问题状态 废除
+
     QProblem problem = QProblem.problem;
 
 
     @Override
     public List<Problem> determineProblem(AuxException auxException) {
         List<Problem> problems = new ArrayList<>();
-        //按照异常链进行查找 此寻找条件作为准确
+        //按照异常链进行查找 此寻找条件比较准确
         problems.addAll(findProblemByCauseChain(auxException.getCauseChain()));
         //按照关键字进行查找 关键字的选取要谨慎
         problems.addAll(findProblemByKeyWords(auxException));
@@ -43,6 +47,7 @@ public class ProblemServiceImpl implements ProblemService{
                 .map(Problem::getId) // 使用 map 方法将 Person 转换为其 id 属性
                 .distinct() // 去除重复的 id 属性
                 .map(id -> problems.stream().filter(problem -> problem.getId().equals(id)).findFirst().get()) // 将去重后的 id 属性转换回 Person 对象
+                .filter(problem->problem.getStatus().equals(ON))
                 .collect(Collectors.toList());
     }
 

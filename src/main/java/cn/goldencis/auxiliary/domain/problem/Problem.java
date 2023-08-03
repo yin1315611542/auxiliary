@@ -34,13 +34,13 @@ public class Problem implements Serializable {
     @Convert(converter = ProblemTypeConverter.class)
     private ProblemType problemType;
 
-    private Long souId;
-
     private String causeChain;
 
     private String describe;
 
     private String keyWord;
+
+    private Integer  status;
 
     private LocalDateTime createTime;
 

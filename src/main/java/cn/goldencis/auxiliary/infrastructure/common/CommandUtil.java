@@ -110,12 +110,12 @@ public class CommandUtil {
             while ((line = reader.readLine()) != null) {
                 execResult.getMessage().append(line);
             }
-            while ((line = errorReader.readLine()) != null) {
-                execResult.getErrorMessage().append(line);
-            }
+//            while ((line = errorReader.readLine()) != null) {
+//                execResult.getErrorMessage().append(line);
+//            }
         } catch (IOException e) {
             throw new RuntimeException(e);
-        } finally {
+        }  finally {
             process.getInputStream().close();
             process.getErrorStream().close();
         }
