@@ -30,6 +30,13 @@ public class ShellTest {
     }
 
     @Test
+    public void cleanAlarm(){
+        Step step = new Step();
+        step.setExcContent("clean_t_alarm.sh");
+        shellCommandExec.execScheme(step);
+    }
+
+    @Test
     public void jh() throws IOException, InterruptedException {
         ProcessBuilder processBuilder = new ProcessBuilder("/var/aux/auxiliary/script/test.sh");
         processBuilder.redirectErrorStream(true);

@@ -60,7 +60,7 @@ public class ProblemServiceImpl implements ProblemService{
     }
 
     public List<Problem> finSelfCheckProblem(){
-        return Lists.newArrayList(problemRepository.findAll(problem.problemType.eq(ProblemType.SelfCheckProblem)));
+        return Lists.newArrayList(problemRepository.findAll(problem.problemType.eq(ProblemType.SelfCheckProblem).and(problem.status.eq(ON))));
     }
 
 }
